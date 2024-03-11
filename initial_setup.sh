@@ -9,11 +9,23 @@ sudo dnf -y update
 sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 ##Get the desired system hostname
-read -p "Enter hostname: " computerName
-sudo hostnamectl hostname "$computerName"
+read -p "Enter hostname: " computername
+sudo hostnamectl hostname "$computername"
+
+##Set repository for latest stable version of kubectl
+getkubectlversion=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+kubectlmajorversion=${getkubectlversion%.*}
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/$kubectlmajorversion/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/$kubectlmajorversion/rpm/repodata/repomd.xml.key
+EOF
 
 ##Install a few packages.
-sudo dnf install -y gnome-tweaks gnome-extensions-app papirus-icon-theme mozilla-fira-* google-roboto-* fira-code* gnome-shell-extension-user-theme vim-enhanced
+sudo dnf install -y gnome-tweaks gnome-extensions-app papirus-icon-theme mozilla-fira-* google-roboto-* fira-code* gnome-shell-extension-user-theme vim-enhanced awscli2 kubectl
 
 ##Install Visual Studio Code
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc

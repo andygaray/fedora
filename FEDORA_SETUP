@@ -15,14 +15,7 @@ sudo hostnamectl hostname "$computername"
 ##Set repository for latest stable version of kubectl
 getkubectllatest=$(curl -L -s https://dl.k8s.io/release/stable.txt)
 kubectlversion=${getkubectllatest%.*}
-cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://pkgs.k8s.io/core:/stable:/$kubectlversion/rpm/
-enabled=1
-gpgcheck=1
-gpgkey=https://pkgs.k8s.io/core:/stable:/$kubectlversion/rpm/repodata/repomd.xml.key
-EOF
+sudo sh -c 'echo -e "[kubernetes]\nname=Kubernetes\nbaseurl=https://pkgs.k8s.io/core:/stable:/$kubectlversion/rpm/\nenabled=1\ngpgkey=https://pkgs.k8s.io/core:/stable:/$kubectlversion/rpm/repodata/repomd.xml.key" > /etc/yum.repos.d/kubernetes.repo'
 
 ##Install a few packages.
 sudo dnf install -y gnome-tweaks gnome-extensions-app papirus-icon-theme mozilla-fira-* google-roboto-* fira-code* gnome-shell-extension-user-theme vim-enhanced awscli2 kubectl

@@ -36,6 +36,10 @@ sudo dnf install -y code
 sudo sh -c 'echo -e "[edge]\nname=Microsoft Edge\nbaseurl=https://packages.microsoft.com/yumrepos/edge\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/edge.repo'
 sudo dnf install -y microsoft-edge-stable
 
+## Install Terraform CLI
+sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+sudo dnf -y install terraform
+
 ##Set a few desktop options
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
 gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,close'

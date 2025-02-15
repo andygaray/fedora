@@ -32,10 +32,6 @@ sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
 sudo dnf install -y code
 
-##Install Microsoft Edge (I know)
-sudo sh -c 'echo -e "[edge]\nname=Microsoft Edge\nbaseurl=https://packages.microsoft.com/yumrepos/edge\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/edge.repo'
-sudo dnf install -y microsoft-edge-stable
-
 ## Install Terraform CLI
 sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
 sudo dnf -y install terraform
@@ -46,4 +42,3 @@ gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,c
 gsettings set org.gnome.desktop.interface font-name 'Noto Sans 11'
 gsettings set org.gnome.desktop.interface document-font-name 'Noto Sans 11'
 gsettings set org.gnome.desktop.interface monospace-font-name 'Noto Sans Mono 10'
-gsettings set org.gnome.mutter experimental-features "['scale-monitor-framebuffer']"

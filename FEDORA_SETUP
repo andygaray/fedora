@@ -12,33 +12,33 @@ sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-rel
 read -p "Enter Computer Name: " computername
 sudo hostnamectl hostname "$computername"
 
-##Set repository for latest stable version of kubectl
-getkubectllatest=$(curl -L -s https://dl.k8s.io/release/stable.txt)
-kubectlversion=${getkubectllatest%.*}
-cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://pkgs.k8s.io/core:/stable:/$kubectlversion/rpm/
-enabled=1
-gpgcheck=1
-gpgkey=https://pkgs.k8s.io/core:/stable:/$kubectlversion/rpm/repodata/repomd.xml.key
-EOF
-
 ##Install a few packages.
-sudo dnf install -y gnome-tweaks gnome-extensions-app papirus-icon-theme mozilla-fira-* google-roboto-* fira-code* gnome-shell-extension-user-theme vim-enhanced awscli2 kubectl
+sudo dnf install -y gnome-tweaks gnome-extensions-app papirus-icon-theme google-roboto-* fira-code* gnome-shell-extension-user-theme gnome-shell-extension-dash-to-dock gnome-shell-extension-blur-my-shell vim-enhanced awscli2
 
 ##Install Visual Studio Code
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
 sudo dnf install -y code
 
+## Install Docker Engine
+sudo dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
+sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $USER #Add current user to docker group
+newgrp docker #Apply the new group to the current session
+
 ## Install Terraform CLI
-sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
+sudo dnf config-manager addrepo --from-repofile=https://rpm.releases.hashicorp.com/fedora/hashicorp.repo
 sudo dnf -y install terraform
 
 ##Set a few desktop options
 gsettings set org.gnome.desktop.interface icon-theme 'Papirus'
 gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,close'
-gsettings set org.gnome.desktop.interface font-name 'Noto Sans 11'
-gsettings set org.gnome.desktop.interface document-font-name 'Noto Sans 11'
-gsettings set org.gnome.desktop.interface monospace-font-name 'Noto Sans Mono 10'
+gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'LEFT'
+
+##Set termincal opacity to 85%
+gsettings set org.gnome.Terminal.Legacy.Settings headerbar '@mb false'
+profile_id=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d \')
+gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/Terminal/Profiles:/:$profile_id/" use-transparent-background true
+gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/Terminal/Profiles:/:$profile_id/" background-transparency-percent 15

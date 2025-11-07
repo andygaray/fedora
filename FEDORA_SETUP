@@ -38,7 +38,5 @@ gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,c
 gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'LEFT'
 
 ##Set termincal opacity to 85%
-gsettings set org.gnome.Terminal.Legacy.Settings headerbar '@mb false'
-profile_id=$(gsettings get org.gnome.Terminal.ProfilesList default | tr -d \')
-gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/Terminal/Profiles:/:$profile_id/" use-transparent-background true
-gsettings set "org.gnome.Terminal.Legacy.Profile:/org/gnome/Terminal/Profiles:/:$profile_id/" background-transparency-percent 15
+CLEAN_UUID=$(dconf read /org/gnome/Ptyxis/default-profile-uuid | tr -d "'")
+dconf write /org/gnome/Ptyxis/Profiles/"$CLEAN_UUID"/opacity 0.85
